@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/spendtime"
+        android:layout_width="316dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="100dp" />
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="center"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:text="00:00"
+        android:textColor="@color/black"
+        android:textSize="80dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="124dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnstart"
+            android:layout_width="139dp"
+            android:layout_height="123dp"
+
+            android:background="@drawable/startbtn" />
+
+        <ImageButton
+            android:id="@+id/btnpause"
+            android:layout_width="127dp"
+            android:layout_height="123dp"
+
+            android:background="@drawable/pausebtn" />
+
+        <ImageButton
+            android:id="@+id/btnstop"
+            android:layout_width="128dp"
+            android:layout_height="123dp"
+            android:layout_marginLeft="5dp"
+
+            android:background="@drawable/stopbtn" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="118dp"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="216dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:text="Enter your work out type:" />
+
+        <EditText
+            android:id="@+id/type"
+            android:layout_width="168dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
+    </LinearLayout>
+
+</LinearLayout>
