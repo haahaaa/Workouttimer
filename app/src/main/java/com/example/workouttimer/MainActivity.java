@@ -2,6 +2,8 @@ package com.example.workouttimer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -21,8 +23,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean running;
     private TextView spendtime;
     private EditText type;
-    String enteredtype;
+    String enteredtype,save;
     private ImageButton btnstart, btnpause, btnstop;
+    SharedPreferences sharedPreferences;
+    Boolean clicked = false;
 
 
     @Override
@@ -36,79 +40,71 @@ public class MainActivity extends AppCompatActivity {
         btnstop = findViewById(R.id.btnstop);
         spendtime = findViewById(R.id.spendtime);
         type = findViewById(R.id.type);
-
-
-
-
-
-
+        sharedPreferences = getSharedPreferences("SHARED_PREF", MODE_PRIVATE);
         chronometer.setFormat("%s");
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        display();
 
         btnstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startChronometer();
+                if(!running){
+                    chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+                    chronometer.start();
+                    running = true;
+
+                }
             }
         });
 
         btnpause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pauseChronometer();
+                if(running){
+                    chronometer.stop();
+                    pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+                    running = false;
+
+                }
             }
         });
 
         btnstop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                enteredtype = type.getText().toString();
+                type.setText(enteredtype);
+                long time = (SystemClock.elapsedRealtime()- chronometer.getBase())/1000;
+                savetime = time;
+                editor.putLong("TIME",time);
+                editor.putString("TYPE", enteredtype);
+                editor.apply();
+                spendtime.setText("You spent "  + savetime  + " secconds on " + enteredtype);
+                save = spendtime.getText().toString();
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                pauseOffset = 0;
+                chronometer.stop();
+                running = false;
 
-
-
-                stopChronometer();
 
 
             }
         });
 
+    }
 
+    private void display() {
 
+            String inputtype = sharedPreferences.getString("TYPE", "");
+            Long inputtime = sharedPreferences.getLong("TIME", 0);
 
+            spendtime.setText("You spent " + inputtime + " secconds on " + inputtype);
 
 
     }
-    public void startChronometer(){
-        if(!running){
 
-            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
-            chronometer.start();
-            running = true;
-
-        }
-    }
-
-
-    public void pauseChronometer(){
-        if(running){
-            chronometer.stop();
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
-            running = false;
-
-        }
-    }
-    public void stopChronometer(){
-
-            enteredtype = type.getText().toString();
-            type.setText(enteredtype);
-            long time = (SystemClock.elapsedRealtime()- chronometer.getBase())/1000;
-            savetime = time;
-            spendtime.setText("You spent "  + time  + " secconds on " + enteredtype);
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            pauseOffset = 0;
-            chronometer.stop();
-            running = false;
-
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -117,9 +113,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putLong("pauseOffset", pauseOffset);
         outState.putLong("chronometer", chronometer.getBase() -1);
         outState.putLong("time", savetime);
-
-
-
+        outState.putString("save", save);
 
     }
 
@@ -131,11 +125,13 @@ public class MainActivity extends AppCompatActivity {
         pauseOffset = savedInstanceState.getLong("pauseOffset");
         chronometer.setBase(savedInstanceState.getLong("chronometer"));
         savetime = savedInstanceState.getLong("time");
-
+        save = savedInstanceState.getString("save");
+        spendtime.setText(save);
 
         if(running){
 
             chronometer.start();
+
         }else
             {
                 chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
